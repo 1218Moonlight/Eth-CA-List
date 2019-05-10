@@ -30,9 +30,13 @@ func newMainBox() mainBox {
 }
 
 func (m mainBox) settingsBar() {
+	eoa := ui.NewEntry()
+	eoa.SetText("input eoa!")
+
 	spinbox := ui.NewSpinbox(0, 100)
 	slider := ui.NewSlider(0, 100)
 
+	m.barBox.vertical.Append(eoa, false)
 	m.barBox.vertical.Append(spinbox, false)
 	m.barBox.vertical.Append(slider, false)
 	m.barBox.vertical.Append(m.btn, false)
@@ -46,7 +50,7 @@ func (m mainBox) settingsBar() {
 	})
 
 	m.btn.OnClicked(func(button *ui.Button) {
-		m.caList(slider.Value())
+		m.caList(eoa.Text(), slider.Value())
 	})
 
 	m.barBox.group.SetChild(m.barBox.vertical)
@@ -54,9 +58,9 @@ func (m mainBox) settingsBar() {
 	m.vertical.Append(m.barBox.group, false)
 }
 
-func (m mainBox) caList(nonce int) {
+func (m mainBox) caList(eoa string, nonce int) {
 	//Todo
-	ca := contract.CreateAddress("0x6f090f6cb125f77396d4b8f52fdabf7d5c1b53d4", uint64(nonce))
+	ca := contract.CreateAddress(eoa, uint64(nonce))
 	m.outPutBox.line.Append(fmt.Sprintf("%s\n", ca))
 }
 
