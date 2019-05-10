@@ -9,7 +9,7 @@ import (
 type mainBox struct {
 	vertical  *ui.Box
 	barBox    barBox
-	btn       *ui.Button
+	btn       btn
 	outPutBox outPutBox
 }
 
@@ -20,10 +20,8 @@ func newMainBox() mainBox {
 			box.SetPadded(true)
 			return box
 		}(),
-		barBox: newBarBox(),
-		btn: func() *ui.Button {
-			return ui.NewButton("Okay")
-		}(),
+		barBox:    newBarBox(),
+		btn:       newBtn(),
 		outPutBox: newOutPutBox()}
 
 	return box
@@ -39,7 +37,8 @@ func (m mainBox) settingsBar() {
 	m.barBox.vertical.Append(eoa, false)
 	m.barBox.vertical.Append(spinbox, false)
 	m.barBox.vertical.Append(slider, false)
-	m.barBox.vertical.Append(m.btn, false)
+	m.barBox.vertical.Append(m.btn.ok, false)
+	m.barBox.vertical.Append(m.btn.clear, false)
 
 	spinbox.OnChanged(func(spinbox *ui.Spinbox) {
 		slider.SetValue(spinbox.Value())
@@ -49,8 +48,12 @@ func (m mainBox) settingsBar() {
 		spinbox.SetValue(slider.Value())
 	})
 
-	m.btn.OnClicked(func(button *ui.Button) {
+	m.btn.ok.OnClicked(func(button *ui.Button) {
 		m.caList(eoa.Text(), slider.Value())
+	})
+
+	m.btn.clear.OnClicked(func(button *ui.Button) {
+		m.outPutBox.line.SetText("")
 	})
 
 	m.barBox.group.SetChild(m.barBox.vertical)
@@ -118,4 +121,21 @@ func newOutPutBox() outPutBox {
 		}()}
 
 	return o
+}
+
+type btn struct {
+	ok    *ui.Button
+	clear *ui.Button
+}
+
+func newBtn() btn {
+	b := btn{
+		ok: func() *ui.Button {
+			return ui.NewButton("Okay")
+		}(),
+		clear: func() *ui.Button {
+			return ui.NewButton("Clear")
+		}()}
+
+	return b
 }
