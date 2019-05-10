@@ -5,13 +5,14 @@ import (
 	_ "github.com/andlabs/ui/winmanifest"
 )
 
-func Start(){
+func Start() {
 	ui.Main(func() {
 		w := newWindow()
 		w.onClosingAndQuit()
 
-		// todo
+		mBox := newMainBox()
 
+		w.setChild(mBox.vertical)
 		w.show()
 	})
 }

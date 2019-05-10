@@ -44,3 +44,7 @@ func (w window) onClosingAndQuit() {
 func (w window) show() {
 	w.main.Show()
 }
+
+func (w window) setChild(child ui.Control) {
+	w.main.SetChild(child)
+}
