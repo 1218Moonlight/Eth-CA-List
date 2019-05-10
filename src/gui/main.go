@@ -11,6 +11,7 @@ func Start() {
 		w.onClosingAndQuit()
 
 		mBox := newMainBox()
+		mBox.settingsBar()
 
 		w.setChild(mBox.vertical)
 		w.show()
