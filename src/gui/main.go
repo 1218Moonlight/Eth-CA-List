@@ -12,6 +12,7 @@ func Start() {
 
 		mBox := newMainBox()
 		mBox.settingsBar()
+		mBox.setLogBox()
 
 		w.setChild(mBox.vertical)
 		w.show()
