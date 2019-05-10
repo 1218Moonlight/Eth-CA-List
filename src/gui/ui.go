@@ -1,13 +1,15 @@
 package gui
 
 import (
+	"github.com/Kioryu/Eth-CA-List/contract"
 	"github.com/andlabs/ui"
+	"fmt"
 )
 
 type mainBox struct {
 	vertical  *ui.Box
 	barBox    barBox
-	button    okBtn
+	btn       *ui.Button
 	outPutBox outPutBox
 }
 
@@ -18,8 +20,10 @@ func newMainBox() mainBox {
 			box.SetPadded(true)
 			return box
 		}(),
-		barBox:    newBarBox(),
-		button:    newOkBtn(),
+		barBox: newBarBox(),
+		btn: func() *ui.Button {
+			return ui.NewButton("Okay")
+		}(),
 		outPutBox: newOutPutBox()}
 
 	return box
@@ -31,7 +35,7 @@ func (m mainBox) settingsBar() {
 
 	m.barBox.vertical.Append(spinbox, false)
 	m.barBox.vertical.Append(slider, false)
-	m.barBox.vertical.Append(m.button.btn, false)
+	m.barBox.vertical.Append(m.btn, false)
 
 	spinbox.OnChanged(func(spinbox *ui.Spinbox) {
 		slider.SetValue(spinbox.Value())
@@ -41,13 +45,19 @@ func (m mainBox) settingsBar() {
 		spinbox.SetValue(slider.Value())
 	})
 
-	m.button.btn.OnClicked(func(button *ui.Button) {
-		m.button.number = slider.Value()
+	m.btn.OnClicked(func(button *ui.Button) {
+		m.caList(slider.Value())
 	})
 
 	m.barBox.group.SetChild(m.barBox.vertical)
 
 	m.vertical.Append(m.barBox.group, false)
+}
+
+func (m mainBox) caList(nonce int) {
+	//Todo
+	ca := contract.CreateAddress("0x6f090f6cb125f77396d4b8f52fdabf7d5c1b53d4", uint64(nonce))
+	m.outPutBox.line.Append(fmt.Sprintf("%s\n", ca))
 }
 
 func (m mainBox) setLogBox() {
@@ -77,20 +87,6 @@ func newBarBox() barBox {
 		}()}
 
 	return b
-}
-
-type okBtn struct {
-	number int
-	btn    *ui.Button
-}
-
-func newOkBtn() okBtn {
-	o := okBtn{
-		btn: func() *ui.Button {
-			return ui.NewButton("Okay")
-		}()}
-
-	return o
 }
 
 type outPutBox struct {
